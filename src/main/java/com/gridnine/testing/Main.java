@@ -2,6 +2,7 @@ package com.gridnine.testing;
 
 import com.gridnine.testing.filters.ArrivalBeforeDepartureFilter;
 import com.gridnine.testing.filters.DepartureBeforeNowFilter;
+import com.gridnine.testing.filters.Filter;
 import com.gridnine.testing.filters.GroundTimeMoreTwoHoursFilter;
 import com.gridnine.testing.model.Flight;
 
@@ -14,16 +15,13 @@ public class Main {
         System.out.println("All Flights:");
         flights.forEach(System.out::println);
 
-        System.out.println("\nFlights after filtering: Departure before now");
-        List<Flight> flightsFilteredByDeparture = new DepartureBeforeNowFilter().filter(flights);
-        flightsFilteredByDeparture.forEach(System.out::println);
+        applyFilterAndPrint(flights, new DepartureBeforeNowFilter(), "Departure before now");
+        applyFilterAndPrint(flights, new ArrivalBeforeDepartureFilter(), "Arrival before departure");
+        applyFilterAndPrint(flights, new GroundTimeMoreTwoHoursFilter(), "Ground time exceeding two hours");
+    }
 
-        System.out.println("\nFlights after filtering: Arrival before departure");
-        List<Flight> flightsFilteredByArrival = new ArrivalBeforeDepartureFilter().filter(flights);
-        flightsFilteredByArrival.forEach(System.out::println);
-
-        System.out.println("\nFlights after filtering: Ground time exceeding two hours");
-        List<Flight> flightsFilteredByGroundTime = new GroundTimeMoreTwoHoursFilter().filter(flights);
-        flightsFilteredByGroundTime.forEach(System.out::println);
+    public static void applyFilterAndPrint(List<Flight> flights, Filter filter, String filterName) {
+        System.out.println("\nFlights after filtering: " + filterName);
+        filter.filter(flights).forEach(System.out::println);
     }
 }

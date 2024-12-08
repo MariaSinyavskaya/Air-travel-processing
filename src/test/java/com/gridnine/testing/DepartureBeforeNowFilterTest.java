@@ -1,28 +1,37 @@
 package com.gridnine.testing;
 
 import com.gridnine.testing.filters.DepartureBeforeNowFilter;
-import com.gridnine.testing.filters.Filter;
 import com.gridnine.testing.model.Flight;
-import org.junit.jupiter.api.BeforeEach;
+import com.gridnine.testing.model.Segment;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DepartureBeforeNowFilterTest {
-    private List<Flight> flights;
+    @Test
+    void testDepartureBeforeNow() {
+        LocalDateTime dep = LocalDateTime.now().plusHours(1);
+        LocalDateTime arr = dep.plusHours(2);
+        Flight flight = new Flight(List.of(new Segment(dep, arr)));
 
-    @BeforeEach
-    void setUp() {
-        flights = FlightBuilder.createFlights();
+        DepartureBeforeNowFilter filter = new DepartureBeforeNowFilter();
+        List<Flight> result = filter.filter(List.of(flight));
+
+        assertFalse(result.isEmpty());
     }
 
     @Test
-    void filterShouldRemoveFlightsWithDepartureBeforeNow() {
-        Filter filter = new DepartureBeforeNowFilter();
-        List<Flight> filteredFlights = filter.filter(flights);
+    void testDepartureBeforeNowPastFlight() {
+        LocalDateTime dep = LocalDateTime.now().minusDays(1);
+        LocalDateTime arr = dep.plusHours(2);
+        Flight flight = new Flight(List.of(new Segment(dep, arr)));
 
-        assertEquals(5, filteredFlights.size());
+        DepartureBeforeNowFilter filter = new DepartureBeforeNowFilter();
+        List<Flight> result = filter.filter(List.of(flight));
+
+        assertTrue(result.isEmpty());
     }
 }
