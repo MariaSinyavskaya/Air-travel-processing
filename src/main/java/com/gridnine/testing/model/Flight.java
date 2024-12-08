@@ -1,7 +1,5 @@
 package com.gridnine.testing.model;
 
-import com.gridnine.testing.model.Segment;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
